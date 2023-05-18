@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-export interface User extends mongoose.Document {
+export interface User {
   firstName: string;
   lastName: string;
   username: string;
@@ -9,7 +9,9 @@ export interface User extends mongoose.Document {
   createdAt: Date;
 }
 
-export const UserSchema = new mongoose.Schema({
+export type UserDocument = User & Document;
+
+export const UserSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   username: { type: String, required: true, unique: true },
@@ -18,5 +20,4 @@ export const UserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-export const UserModel = mongoose.model('User', UserSchema);
-export type UserDocument = User & mongoose.Document;
+export const UserModel = model<UserDocument>('User', UserSchema);
