@@ -1,44 +1,41 @@
 import {
-  Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   Delete,
+  Body,
+  Param,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { Post as PostEntity } from '../schemas/post.schema';
+import { Post as Posts } from './Items/interface/post.interface';
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
-
-  @Post('create')
-  async createPost(@Body() post: PostEntity): Promise<PostEntity> {
-    return this.postService.createPost(post);
-  }
+  constructor(private readonly postsService: PostService) {}
 
   @Get()
-  async getAllPosts(): Promise<PostEntity[]> {
-    return this.postService.getAllPosts();
+  findAll(): Promise<Posts[]> {
+    return this.postsService.findAll();
   }
 
   @Get(':id')
-  async getPostById(@Param('id') id: string): Promise<PostEntity> {
-    return this.postService.getPostById(id);
+  findOne(@Param('id') id: string): Promise<Posts> {
+    return this.postsService.findOne(id);
   }
 
-  @Put(':id')
-  async updatePostById(
-    @Param('id') id: string,
-    @Body() post: PostEntity,
-  ): Promise<PostEntity> {
-    return this.postService.updatePostById(id, post);
+  @Post()
+  create(@Body() post: Posts): Promise<Posts> {
+    return this.postsService.create(post);
   }
 
   @Delete(':id')
-  async deletePostById(@Param('id') id: string): Promise<void> {
-    return this.postService.deletePostById(id);
+  delete(@Param('id') id: string): Promise<Posts> {
+    return this.postsService.delete(id);
+  }
+
+  @Put(':id')
+  update(@Body() post: Posts, @Param('id') id: string): Promise<Posts> {
+    return this.postsService.update(id, post);
   }
 }

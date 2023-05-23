@@ -1,33 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { Post } from './Items/interface/post.interface';
 import { Model } from 'mongoose';
-import { Post, PostDocument, PostModel } from '../schemas/post.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class PostService {
-  constructor(
-    @InjectModel(PostModel.name)
-    private readonly postModel: Model<PostDocument>,
-  ) {}
+  constructor(@InjectModel('Post') private readonly postModel: Model<Post>) {}
 
-  async createPost(post: Post): Promise<Post> {
-    const createdPost = new this.postModel(post);
-    return createdPost.save();
+  async findAll(): Promise<Post[]> {
+    return await this.postModel.find().exec();
   }
 
-  async getAllPosts(): Promise<Post[]> {
-    return this.postModel.find().exec();
+  async findOne(id: string): Promise<Post> {
+    return await this.postModel.findById(id).exec();
   }
 
-  async getPostById(id: string): Promise<Post> {
-    return this.postModel.findById(id).exec();
+  async create(post: Post): Promise<Post> {
+    const newPost = new this.postModel(post);
+    return await newPost.save();
   }
 
-  async updatePostById(id: string, post: Post): Promise<Post> {
-    return this.postModel.findByIdAndUpdate(id, post, { new: true }).exec();
+  async delete(id: string): Promise<Post> {
+    return await this.postModel.findByIdAndRemove(id).exec();
   }
 
-  async deletePostById(id: string): Promise<void> {
-    await this.postModel.findByIdAndDelete(id).exec();
+  async update(id: string, post: Post): Promise<Post> {
+    return await this.postModel
+      .findByIdAndUpdate(id, post, { new: true })
+      .exec();
   }
 }

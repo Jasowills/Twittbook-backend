@@ -1,44 +1,41 @@
 import {
-  Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   Delete,
+  Body,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '../schemas/user.schema';
+import { User } from './Items/interface/user.interface';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-
-  @Post('create')
-  async createUser(@Body() user: User): Promise<User> {
-    return this.userService.createUser(user);
-  }
+  constructor(private readonly usersService: UserService) {}
 
   @Get()
-  async getAllUsers(): Promise<User[]> {
-    return this.userService.getAllUsers();
+  findAll(): Promise<User[]> {
+    return this.usersService.findAll();
   }
 
   @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<User> {
-    return this.userService.getUserById(id);
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.findOne(id);
   }
 
-  @Put(':id')
-  async updateUserById(
-    @Param('id') id: string,
-    @Body() user: User,
-  ): Promise<User> {
-    return this.userService.updateUserById(id, user);
+  @Post()
+  create(@Body() user: User): Promise<User> {
+    return this.usersService.create(user);
   }
 
   @Delete(':id')
-  async deleteUserById(@Param('id') id: string): Promise<void> {
-    return this.userService.deleteUserById(id);
+  delete(@Param('id') id: string): Promise<User> {
+    return this.usersService.delete(id);
+  }
+
+  @Put(':id')
+  update(@Body() user: User, @Param('id') id: string): Promise<User> {
+    return this.usersService.update(id, user);
   }
 }
