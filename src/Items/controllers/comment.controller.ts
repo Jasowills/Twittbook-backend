@@ -14,16 +14,6 @@ import { Comment } from '../interface/comment.interface';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  // @Get()
-  // async findAll(): Promise<Comment[]> {
-  //   return this.commentService.getAllComments();
-  // }
-
-  // @Get(':id')
-  // async findOne(@Param('id') id: string): Promise<Comment> {
-  //   return this.commentService.getCommentById(id);
-  // }
-
   @Post()
   async create(@Body() comment: Comment): Promise<Comment> {
     return this.commentService.create(comment);

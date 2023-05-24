@@ -1,9 +1,5 @@
 import { Schema, Document, model } from 'mongoose';
-
-export interface Like extends Document {
-  postId: string;
-  userId: string;
-}
+import { Like } from '../interface/like.inteface';
 
 export const LikeSchema = new Schema({
   postId: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
@@ -12,3 +8,4 @@ export const LikeSchema = new Schema({
 
 export const LikeModel = model<Like>('Like', LikeSchema);
 export type LikeDocument = Like & Document;
+export { Like };

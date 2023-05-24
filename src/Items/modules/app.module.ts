@@ -6,9 +6,11 @@ import { UserModule } from './user.module';
 import config from '../../config/key';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
+import { LikeModule } from './like.module';
 
 @Module({
   imports: [
+    LikeModule,
     PostModule,
     CommentModule,
     UserModule,
