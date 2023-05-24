@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Post } from './Items/interface/post.interface';
+import { Post } from '../interface/post.interface';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { CommentModel } from '../schemas/comment.schema';
 
 @Injectable()
 export class PostService {

@@ -7,8 +7,8 @@ import {
   Body,
   Param,
 } from '@nestjs/common';
-import { PostService } from './post.service';
-import { Post as Posts } from './Items/interface/post.interface';
+import { PostService } from '../services/post.service';
+import { Post as Posts } from '../interface/post.interface';
 
 @Controller('posts')
 export class PostController {
