@@ -41,6 +41,9 @@ export class CommentService {
 
     return deletedComment;
   }
+  async getCommentsByPostId(postId: string): Promise<Comment[]> {
+    return this.commentModel.find({ postId }).exec();
+  }
 
   // Other methods...
 }

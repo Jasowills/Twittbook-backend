@@ -9,10 +9,15 @@ import {
 } from '@nestjs/common';
 import { PostService } from '../services/post.service';
 import { Post as Posts } from '../interface/post.interface';
+import { CommentService } from '../services/comment.service';
+import { Comment } from '../interface/comment.interface'; // Add this import statement
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postsService: PostService) {}
+  constructor(
+    private readonly postsService: PostService,
+    private readonly commentService: CommentService, // Combine the constructor into one
+  ) {}
 
   @Get()
   findAll(): Promise<Posts[]> {
@@ -37,5 +42,10 @@ export class PostController {
   @Put(':id')
   update(@Body() post: Posts, @Param('id') id: string): Promise<Posts> {
     return this.postsService.update(id, post);
+  }
+
+  @Get(':id/comments')
+  async getPostComments(@Param('id') postId: string): Promise<Comment[]> {
+    return this.commentService.getCommentsByPostId(postId);
   }
 }
