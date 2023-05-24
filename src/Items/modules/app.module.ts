@@ -7,9 +7,11 @@ import config from '../../config/key';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { LikeModule } from './like.module';
+import { FollowModule } from './follow.module';
 
 @Module({
   imports: [
+    FollowModule,
     LikeModule,
     PostModule,
     CommentModule,
