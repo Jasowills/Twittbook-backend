@@ -8,9 +8,13 @@ import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { LikeModule } from './like.module';
 import { FollowModule } from './follow.module';
+import { MessageModule } from './message.module';
+import { NotificationModule } from './notification.module';
 
 @Module({
   imports: [
+    NotificationModule,
+    MessageModule,
     FollowModule,
     LikeModule,
     PostModule,
