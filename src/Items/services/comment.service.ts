@@ -3,12 +3,9 @@ import { Comment } from '../interface/comment.interface';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostModel, PostDocument } from '../schemas/post.schema';
-import { Follow } from '../interface/follow.interface';
 
 @Injectable()
 export class CommentService {
-  followModel: any;
-  userModel: any;
   constructor(
     @InjectModel('Comment') private readonly commentModel: Model<Comment>,
     @InjectModel('Post') private readonly postModel: Model<PostDocument>,
@@ -29,24 +26,21 @@ export class CommentService {
     return savedComment;
   }
 
-  async delete(id: string): Promise<Follow> {
-    const deletedFollow = await this.followModel.findByIdAndRemove(id).exec();
+  async delete(id: string): Promise<Comment> {
+    const deletedComment = await this.commentModel.findByIdAndRemove(id).exec();
 
-    // Retrieve the related user and update the followers count
-    if (deletedFollow) {
-      const user = await this.userModel
-        .findById(deletedFollow.followingId)
-        .exec();
+    // Retrieve the related post and update the comment count
+    if (deletedComment) {
+      const post = await this.postModel.findById(deletedComment.postId).exec();
 
-      if (user && user.followers) {
-        user.followers -= 1;
-        await user.save();
+      if (post && post.comments) {
+        post.comments -= 1;
+        await post.save();
       }
     }
 
-    return deletedFollow;
+    return deletedComment;
   }
-
   async getCommentsByPostId(postId: string): Promise<Comment[]> {
     return this.commentModel.find({ postId }).exec();
   }

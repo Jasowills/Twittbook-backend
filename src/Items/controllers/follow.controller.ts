@@ -19,10 +19,7 @@ export class FollowController {
   }
 
   @Delete(':userId/:followingId')
-  async delete(
-    @Param('userId') userId: string,
-    @Param('followingId') followingId: string,
-  ): Promise<any> {
-    return this.followService.delete(userId, followingId);
+  async deleteFollow(@Param('id') id: string): Promise<any> {
+    return this.followService.delete(id);
   }
 }

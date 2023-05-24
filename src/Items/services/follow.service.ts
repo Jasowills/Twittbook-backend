@@ -26,15 +26,20 @@ export class FollowService {
     return newFollow;
   }
 
-  async delete(userId: string, followingId: string): Promise<Follow> {
-    const deletedFollow = await this.followModel
-      .findOneAndRemove({ userId, followingId })
-      .exec();
+  async delete(id: string): Promise<Follow> {
+    const deletedFollow = await this.followModel.findByIdAndRemove(id).exec();
 
-    // Decrease the followers count on the user
-    await this.userModel.findByIdAndUpdate(followingId, {
-      $inc: { followers: -1 },
-    });
+    // Retrieve the related user and update the followers count
+    if (deletedFollow) {
+      const user = await this.userModel
+        .findById(deletedFollow.followingId)
+        .exec();
+
+      if (user && user.followers) {
+        user.followers -= 1;
+        await user.save();
+      }
+    }
 
     return deletedFollow;
   }
