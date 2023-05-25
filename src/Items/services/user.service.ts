@@ -15,9 +15,13 @@ export class UserService {
     return await this.userModel.findById(id).exec();
   }
 
-  async create(user: User): Promise<User> {
+  async signup(user: User): Promise<User> {
     const newUser = new this.userModel(user);
     return await newUser.save();
+  }
+
+  async login(email: string, password: string): Promise<User> {
+    return await this.userModel.findOne({ email, password }).exec();
   }
 
   async delete(id: string): Promise<User> {

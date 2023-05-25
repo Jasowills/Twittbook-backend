@@ -2,10 +2,10 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
+  Put,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { User } from '../interface/user.interface';
@@ -24,9 +24,17 @@ export class UserController {
     return this.usersService.findOne(id);
   }
 
-  @Post()
-  create(@Body() user: User): Promise<User> {
-    return this.usersService.create(user);
+  @Post('signup')
+  signup(@Body() user: User): Promise<User> {
+    return this.usersService.signup(user);
+  }
+
+  @Post('login')
+  login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ): Promise<User> {
+    return this.usersService.login(email, password);
   }
 
   @Delete(':id')
