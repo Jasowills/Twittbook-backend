@@ -17,10 +17,18 @@ export class FollowService {
 
     // Retrieve the related user and update the followers count
     const user = await this.userModel.findById(follow.followingId).exec();
+    const follower = await this.userModel.findById(follow.userId).exec();
 
     if (user) {
       user.followers = user.followers ? user.followers + 1 : 1;
       await user.save();
+    }
+
+    if (follower) {
+      follower.isFollowing = follower.isFollowing
+        ? follower.isFollowing + 1
+        : 1; // Increment the isFollowing count
+      await follower.save();
     }
 
     return newFollow;
@@ -37,6 +45,7 @@ export class FollowService {
 
       if (user && user.followers) {
         user.followers -= 1;
+        user.isFollowing -= 1; // Decrement the isFollowing count
         await user.save();
       }
     }

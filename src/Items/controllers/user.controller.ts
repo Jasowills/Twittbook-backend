@@ -26,7 +26,7 @@ export class UserController {
 
   @Post('signup')
   signup(@Body() user: User): Promise<User> {
-    return this.usersService.signup(user);
+    return this.usersService.signUp(user);
   }
 
   @Post('login')

@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  isFollowing: { type: Number, default: 0 }, // Add the isFollowing column
   followers: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });

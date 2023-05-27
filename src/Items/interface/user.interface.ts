@@ -4,6 +4,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  isFollowing: number;
   followers: number;
   createdAt: Date;
 }
