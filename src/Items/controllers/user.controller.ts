@@ -25,16 +25,26 @@ export class UserController {
   }
 
   @Post('signup')
-  signup(@Body() user: User): Promise<User> {
-    return this.usersService.signUp(user);
+  async signup(@Body() user: User): Promise<{ user: User; token: string }> {
+    try {
+      const result = await this.usersService.signUp(user);
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   @Post('login')
-  login(
+  async login(
     @Body('email') email: string,
     @Body('password') password: string,
-  ): Promise<User> {
-    return this.usersService.login(email, password);
+  ): Promise<{ user: User; token: string }> {
+    try {
+      const result = await this.usersService.login(email, password);
+      return result;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   @Delete(':id')

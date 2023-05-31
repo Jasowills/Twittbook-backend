@@ -7,4 +7,5 @@ export interface User {
   isFollowing: number;
   followers: number;
   createdAt: Date;
+  profilePicture: string;
 }
