@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Post } from '../interface/post.interface';
-import { Model } from 'mongoose';
+import { Model, Document, PopulatedDoc } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentModel } from '../schemas/comment.schema';
+
+export type PostDocument = Post & Document;
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel('Post') private readonly postModel: Model<Post>) {}
+  constructor(
+    @InjectModel('Post') private readonly postModel: Model<PostDocument>,
+  ) {}
 
   async findAll(): Promise<Post[]> {
     return await this.postModel.find().exec();
@@ -18,7 +21,9 @@ export class PostService {
 
   async create(post: Post): Promise<Post> {
     const newPost = new this.postModel(post);
-    return await newPost.save();
+    const populatedPost = await newPost.save();
+    await populatedPost.populate('userId', 'username profilePicture');
+    return populatedPost;
   }
 
   async delete(id: string): Promise<Post> {

@@ -1,8 +1,13 @@
 export interface Post {
+  populate(arg0: string, arg1: string): unknown;
   content: string;
-  author: string;
-  image: string;
-  likes: number;
-  comments: number;
-  createdAt: Date;
+  userId: string;
+  likes?: number;
+  image?: string;
+  comments?: number;
+  createdAt?: Date;
+  user: {
+    username: string;
+    profilePicture: string;
+  };
 }
