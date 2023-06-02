@@ -4,8 +4,8 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  profilePicture: string;
   isFollowing: number;
   followers: number;
   createdAt: Date;
-  profilePicture: string;
 }

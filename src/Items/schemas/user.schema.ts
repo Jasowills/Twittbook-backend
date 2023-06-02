@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   isFollowing: { type: Number, default: 0 },
   followers: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
-  profilePicture: { type: String, required: true },
+  profilePicture: { type: String },
 });
 
 export const UserModel = mongoose.model<UserDocument>('User', UserSchema);
