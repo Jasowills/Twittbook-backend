@@ -33,7 +33,7 @@ export class UserService {
     await newUser.save();
 
     // Automatically follow the admin
-    const adminId = '64723a18e207b584fd1ee3d7';
+    const adminId = '6479c8630d4b96efdd3a33e0';
     const admin = await this.userModel.findById(adminId).exec();
 
     if (admin) {
