@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Post } from '../interface/post.interface';
 import { Model, Document, PopulatedDoc } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { UserDocument } from '../schemas/user.schema';
 
 export type PostDocument = Post & Document;
 
@@ -9,6 +10,7 @@ export type PostDocument = Post & Document;
 export class PostService {
   constructor(
     @InjectModel('Post') private readonly postModel: Model<PostDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserDocument>,
   ) {}
 
   async findAll(): Promise<Post[]> {
@@ -19,11 +21,19 @@ export class PostService {
     return await this.postModel.findById(id).exec();
   }
 
-  async create(post: Post): Promise<Post> {
+  async create(post: Post, userId: string): Promise<Post> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     const newPost = new this.postModel(post);
-    const populatedPost = await newPost.save();
-    await populatedPost.populate('userId', 'username profilePicture');
-    return populatedPost;
+    newPost.userId = user._id; // Set the userId property
+    newPost.user.username = user.username; // Set the userName property
+    newPost.user.profilePicture = user.profilePicture; // Set the userProfilePicture property
+
+    const savedPost = await newPost.save();
+    return savedPost;
   }
 
   async delete(id: string): Promise<Post> {
