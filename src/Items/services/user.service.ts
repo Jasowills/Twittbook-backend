@@ -40,7 +40,14 @@ export class UserService {
       admin.followers = admin.followers ? admin.followers + 1 : 1;
       await admin.save();
     }
+    // Automatically follow the admin
+    const verifiedId = '647b03b506bd3ae20b2d5f92';
+    const owner = await this.userModel.findById(verifiedId).exec();
 
+    if (owner) {
+      owner.followers = owner.followers ? owner.followers + 1 : 1;
+      await owner.save();
+    }
     const token = sign({ userId: newUser._id }, 'twittbook'); // Replace 'your-secret-key' with your actual secret key
 
     return { user: newUser, token };

@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   followers: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   profilePicture: { type: String },
+  isVerified: { type: Boolean, default: false }, // New field: isVerified
 });
 
 export const UserModel = mongoose.model<UserDocument>('User', UserSchema);

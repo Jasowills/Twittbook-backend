@@ -8,4 +8,5 @@ export interface User {
   isFollowing: number;
   followers: number;
   createdAt: Date;
+  isVerified: boolean; // New field: isVerified
 }
