@@ -7,12 +7,18 @@ export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
   @Post()
-  async create(@Body() like: Like): Promise<Like> {
-    return this.likeService.create(like);
+  async likePost(
+    @Body('postId') postId: string,
+    @Body('userId') userId: string,
+  ): Promise<Like> {
+    return this.likeService.likePost(postId, userId);
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string): Promise<Like> {
-    return this.likeService.delete(id);
+  @Delete(':postId/:userId')
+  async unlikePost(
+    @Param('postId') postId: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    await this.likeService.unlikePost(postId, userId);
   }
 }

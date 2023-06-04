@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Like, LikeDocument, LikeModel } from '../schemas/like.schema';
-import { PostModel, PostDocument } from '../schemas/post.schema';
+import { Model } from 'mongoose';
+import { Like, LikeDocument } from '../schemas/like.schema';
+import { PostDocument } from '../schemas/post.schema';
 
 @Injectable()
 export class LikeService {
@@ -11,36 +11,39 @@ export class LikeService {
     @InjectModel('Post') private readonly postModel: Model<PostDocument>,
   ) {}
 
-  async create(like: Like): Promise<Like> {
-    const newLike = new this.likeModel(like);
+  async likePost(postId: string, userId: string): Promise<Like> {
+    const existingLike = await this.likeModel
+      .findOne({ postId, userId })
+      .exec();
+
+    if (existingLike) {
+      // User has already liked the post
+      return existingLike;
+    }
+
+    const newLike = new this.likeModel({ postId, userId });
     await newLike.save();
 
-    // Retrieve the related post and update the likes count
-    const post = await this.postModel.findById(like.postId).exec();
-
+    const post = await this.postModel.findById(postId).exec();
     if (post) {
-      post.likes = post.likes ? post.likes + 1 : 1;
+      post.likes += 1;
       await post.save();
     }
 
     return newLike;
   }
 
-  async delete(id: string): Promise<Like> {
-    const deletedLike = await LikeModel.findByIdAndRemove(id).exec();
+  async unlikePost(postId: string, userId: string): Promise<void> {
+    const deletedLike = await this.likeModel
+      .findOneAndDelete({ postId, userId })
+      .exec();
 
-    // Retrieve the related post and update the likes count
     if (deletedLike) {
-      const post = await this.postModel.findById(deletedLike.postId).exec();
-
+      const post = await this.postModel.findById(postId).exec();
       if (post && post.likes > 0) {
         post.likes -= 1;
         await post.save();
       }
     }
-
-    return deletedLike;
   }
-
-  // Other methods...
 }
