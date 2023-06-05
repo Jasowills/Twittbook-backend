@@ -9,11 +9,15 @@ import {
 } from '@nestjs/common';
 import { Post as Posts } from '../interface/post.interface';
 import { PostService } from '../services/post.service';
+import { CommentService } from '../services/comment.service';
+import { Comment } from '../interface/comment.interface';
 
 @Controller('posts')
 export class PostController {
-  commentService: any;
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentService: CommentService,
+  ) {}
 
   @Get()
   findAll(): Promise<Posts[]> {

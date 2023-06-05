@@ -3,16 +3,27 @@ import { Comment } from '../interface/comment.interface';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostModel, PostDocument } from '../schemas/post.schema';
+import { UserDocument, UserModel } from '../schemas/user.schema'; // Import the UserModel
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel('Comment') private readonly commentModel: Model<Comment>,
     @InjectModel('Post') private readonly postModel: Model<PostDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserDocument>, // Inject the UserModel
   ) {}
 
-  async create(comment: Comment): Promise<Comment> {
+  async create(comment: Comment, userId: string): Promise<Comment> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     const newComment = new this.commentModel(comment);
+    newComment.userId = user._id; // Set the userId property
+    newComment.user.username = user.username; // Set the userName property
+    newComment.user.profilePicture = user.profilePicture; // Set the userProfilePicture property
+
     const savedComment = await newComment.save();
 
     // Retrieve the related post and update the comment count
@@ -41,8 +52,14 @@ export class CommentService {
 
     return deletedComment;
   }
+
   async getCommentsByPostId(postId: string): Promise<Comment[]> {
-    return this.commentModel.find({ postId }).exec();
+    const comments = await this.commentModel.find({ postId }).exec();
+    return comments.map((comment) => ({
+      ...comment.toObject(),
+      username: comment.user.username,
+      userProfilePicture: comment.user.profilePicture,
+    }));
   }
 
   // Other methods...

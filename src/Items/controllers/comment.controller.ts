@@ -14,9 +14,12 @@ import { Comment } from '../interface/comment.interface';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  async create(@Body() comment: Comment): Promise<Comment> {
-    return this.commentService.create(comment);
+  @Post(':userId') // Add ':userId' route parameter
+  async create(
+    @Body() comment: Comment,
+    @Param('userId') userId: string,
+  ): Promise<Comment> {
+    return this.commentService.create(comment, userId);
   }
 
   @Delete(':id')

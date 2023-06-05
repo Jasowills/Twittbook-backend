@@ -8,6 +8,10 @@ export const CommentSchema = new Schema({
   postId: { type: String, required: true },
   content: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  user: {
+    username: { type: String },
+    profilePicture: { type: String },
+  },
 });
 
 export const CommentModel = model<CommentDocument>('Comment', CommentSchema);
