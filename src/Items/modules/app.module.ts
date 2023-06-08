@@ -10,6 +10,7 @@ import { LikeModule } from './like.module';
 import { FollowModule } from './follow.module';
 import { MessageModule } from './message.module';
 import { NotificationModule } from './notification.module';
+import { MyWebSocketGateway } from './../../websocket.gateway'; // Import the WebSocket gateway
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { NotificationModule } from './notification.module';
     MongooseModule.forRoot(config.mongoURI),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MyWebSocketGateway], // Include the WebSocket gateway as a provider
 })
 export class AppModule {}
